@@ -13,6 +13,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 final class UserResource extends JsonResource
 {
+    public static $wrap;
+
     public function toArray(Request $request): array
     {
         return [
