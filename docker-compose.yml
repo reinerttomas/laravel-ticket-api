@@ -1,0 +1,5 @@
+services:
+  php:
+    image: serversideup/php:8.5-frankenphp
+    environment:
+      HEALTHCHECK_PATH: /up
