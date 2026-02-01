@@ -19,3 +19,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Docker volume data
+/.infrastructure/volume_data/

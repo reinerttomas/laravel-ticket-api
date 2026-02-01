@@ -1,10 +1,16 @@
 services:
   php:
-    stop_signal: SIGTERM
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+      target: development
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    ports:
+      - "80:8080"
+      - "443:8443"
     volumes:
-      - .:/var/www/html/
-    networks:
-      - development
-
-networks:
-  development:
+      - "./:/var/www/html"
+    environment:
+      SSL_MODE: "mixed"

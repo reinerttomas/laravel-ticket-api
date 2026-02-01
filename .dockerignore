@@ -1,0 +1,48 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+.infrastructure
+
+# IDE
+/.idea
+/.vscode
+/.fleet
+/.nova
+/.zed
+.phpactor.json
+
+# Laravel
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+/storage/pail
+/bootstrap/cache/*.php
+/.env
+/.env.*
+!/.env.production
+auth.json
+
+# Testing
+.phpunit.result.cache
+/.phpunit.cache
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+CLAUDE.md
