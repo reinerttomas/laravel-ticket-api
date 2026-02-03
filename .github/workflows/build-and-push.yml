@@ -50,3 +50,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
+
+      - name: Trigger Dokploy Deployment
+        if: success()
+        run: |
+          curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{"message": "Deployment triggered by GitHub Actions after successful image push"}'

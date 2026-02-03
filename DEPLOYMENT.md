@@ -109,14 +109,37 @@ volumes:
 
 **Important**: This ensures your database persists across container restarts and redeployments.
 
-### 5. Deploy the Application
+### 5. Configure Automatic Deployments (Optional but Recommended)
 
-1. Click **"Deploy"** in Dokploy
+To automatically deploy when new Docker images are pushed:
+
+#### Step 1: Get Dokploy Webhook URL
+
+1. In Dokploy dashboard, open your `laravel-ticket-api` project
+2. Navigate to **Settings** or **Webhooks** section
+3. Copy the **Deployment Webhook URL** (e.g., `https://your-dokploy.com/api/webhook/deploy/xxxxx`)
+
+#### Step 2: Add Webhook URL to GitHub Secrets
+
+1. Go to your GitHub repository: `https://github.com/reinerttomas/laravel-ticket-api`
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Name: `DOKPLOY_WEBHOOK_URL`
+5. Value: Paste the webhook URL from Dokploy
+6. Click **Add secret**
+
+**Note**: The GitHub Actions workflow (`.github/workflows/build-and-push.yml`) is already configured to trigger Dokploy automatically after successful image push.
+
+### 6. Deploy the Application
+
+1. Click **"Deploy"** in Dokploy (first time only)
 2. Dokploy will:
    - Pull the latest image from `ghcr.io/reinerttomas/laravel-ticket-api:latest`
    - Start the container with your environment variables
    - Mount the persistent SQLite volume
    - Run migrations automatically (via `AUTORUN_ENABLED=true`)
+
+**After initial setup**: Push to `main` branch → GitHub Actions builds image → Dokploy deploys automatically via webhook
 
 ### 6. Verify Deployment
 
@@ -177,7 +200,19 @@ The `--force` flag is required in production environments.
 
 ## Updating the Application
 
-### Automatic Updates (Recommended)
+### Automatic Updates with Webhook (Recommended)
+
+If you configured the webhook (Step 5 above):
+
+1. Push changes to the `main` branch
+2. GitHub Actions automatically builds and pushes a new image
+3. **Dokploy deploys automatically via webhook** (no manual action needed)
+4. Dokploy pulls the new image and restarts the container
+5. Migrations run automatically
+
+### Manual Updates
+
+If webhook is not configured:
 
 1. Push changes to the `main` branch
 2. GitHub Actions automatically builds and pushes a new image
