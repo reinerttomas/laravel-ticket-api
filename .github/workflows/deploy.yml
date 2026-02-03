@@ -31,7 +31,7 @@ jobs:
           MESSAGE="${{ github.event.inputs.reason || format('Automatic deployment after build (commit: {0})', github.sha) }}"
           curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
-            -d "{\"message\": \"$MESSAGE\"}"
+            -d "{\"branch\": \"main\", \"message\": \"$MESSAGE\", \"commit\": \"${{ github.sha }}\"}"
 
       - name: Deployment Status
         run: |
