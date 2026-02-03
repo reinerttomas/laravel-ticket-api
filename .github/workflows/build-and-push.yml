@@ -11,6 +11,7 @@ env:
 
 jobs:
   build-and-push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -51,9 +52,8 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
 
-      - name: Trigger Dokploy Deployment
-        if: success()
+      - name: Build Summary
         run: |
-          curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{"message": "Deployment triggered by GitHub Actions after successful image push"}'
+          echo "✅ Docker image built and pushed successfully"
+          echo "📦 Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          echo "🔗 Commit: ${{ github.sha }}"

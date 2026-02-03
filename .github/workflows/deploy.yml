@@ -1,0 +1,46 @@
+name: Deploy to Dokploy
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Důvod deploymentu'
+        required: false
+        default: 'Manual deploy'
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  deploy:
+    name: Deploy to Dokploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Trigger Dokploy Deployment
+        run: |
+          MESSAGE="${{ github.event.inputs.reason || format('Automatic deployment after build (commit: {0})', github.sha) }}"
+          curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"message\": \"$MESSAGE\"}"
+
+      - name: Deployment Status
+        run: |
+          echo "✅ Dokploy webhook triggered successfully"
+          echo "📦 Deploying: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "📝 Reason: ${{ github.event.inputs.reason }}"
+            echo "👤 Triggered by: ${{ github.actor }}"
+          else
+            echo "🤖 Automatic deployment after successful build"
+            echo "🔗 Commit: ${{ github.sha }}"
+          fi
