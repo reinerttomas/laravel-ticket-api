@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,6 +28,6 @@ final class AppServiceProvider extends ServiceProvider
 
     private function registerScramble(): void
     {
-        Gate::define('viewApiDocs', fn (): true => true);
+        Gate::define('viewApiDocs', fn (?User $user): true => true);
     }
 }
