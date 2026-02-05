@@ -69,4 +69,8 @@ COPY --chown=www-data:www-data . /var/www/html
 # Copy vendor from composer stage
 COPY --from=composer --chown=www-data:www-data /app/vendor /var/www/html/vendor
 
+# Create volume mount directories so Docker doesn't create them as root
+RUN mkdir -p /var/www/html/.infrastructure/volume_data/sqlite \
+    && chown -R www-data:www-data /var/www/html/.infrastructure
+
 USER www-data
