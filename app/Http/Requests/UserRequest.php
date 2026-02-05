@@ -32,8 +32,11 @@ final class UserRequest extends FormRequest
                 Rule::unique(User::class, 'email')->ignore($this->user),
             ],
 
+            /**
+             * Required only when creating a new user.
+             */
             'password' => [
-                'required',
+                Rule::requiredIf(fn (): bool => $this->user === null),
                 'string',
                 Password::default(),
                 'confirmed',

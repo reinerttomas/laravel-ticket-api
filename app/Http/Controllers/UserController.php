@@ -5,37 +5,60 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+#[Group('Users')]
 final readonly class UserController
 {
-    public function index(): ResourceCollection
+    /**
+     * Index
+     */
+    public function index(Request $request): AnonymousResourceCollection
     {
-        return User::query()->paginate()->toResourceCollection();
+        return UserResource::collection(
+            User::query()->paginate(
+                perPage: $request->input('perPage', 15),
+                page: $request->input('page', 1),
+            )
+        );
     }
 
-    public function show(User $user): JsonResource
+    /**
+     * Show
+     */
+    public function show(User $user): UserResource
     {
-        return $user->toResource();
+        return UserResource::make($user);
     }
 
-    public function store(UserRequest $request): JsonResource
+    /**
+     * Create
+     */
+    public function store(UserRequest $request): UserResource
     {
         $user = User::query()->create($request->validated());
 
-        return $user->toResource();
+        return UserResource::make($user);
     }
 
-    public function update(UserRequest $request, User $user): JsonResource
+    /**
+     * Update
+     */
+    public function update(UserRequest $request, User $user): UserResource
     {
         $user->update($request->validated());
 
-        return $user->toResource();
+        return UserResource::make($user);
     }
 
+    /**
+     * Delete
+     */
     public function destroy(User $user): JsonResponse
     {
         $user->delete();
