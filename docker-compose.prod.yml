@@ -14,7 +14,7 @@ services:
     environment:
       AUTORUN_ENABLED: "true" # 👈 Remove this line if you don't want Laravel Automations
       PHP_OPCACHE_ENABLE: "1"
-      SSL_MODE: "full"
+      SSL_MODE: "off"
 
 volumes:
   database:
