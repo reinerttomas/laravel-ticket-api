@@ -3,6 +3,8 @@ services:
     build:
       target: deploy
       dockerfile: Dockerfile.php
+    env_file:
+      - .env
     networks:
       - web-public
     volumes:
